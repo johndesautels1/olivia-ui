@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ask Olivia</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 1rem;
+        background: #f0f4f8;
+      }
+      textarea {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        margin-bottom: 10px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        background-color: #1e40af;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+      video {
+        display: block;
+        margin-top: 20px;
+        width: 100%;
+        max-width: 720px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Ask Olivia About Your CLUES Report</h2>
+    <textarea id="msg" rows="4" placeholder="Type your question here..."></textarea><br/>
+    <button onclick="askOlivia()">Ask Olivia</button>
+    <video id="oliviaVideo" controls autoplay playsinline></video>
+
+    <script>
+      async function askOlivia() {
+        const message = document.getElementById("msg").value;
+        if (!message) return alert("Please enter a question.");
+        const res = await fetch("https://olivia-api-clues.vercel.app/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message,
+            clientId: "test-client"
+          })
+        });
+        const data = await res.json();
+        const video = document.getElementById("oliviaVideo");
+        video.src = data.video;
+        video.load();
+        video.play();
+      }
+    </script>
+  </body>
+</html>
