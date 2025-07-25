@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ask Olivia - CLUES Concierge</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 1rem;
+        font-family: Arial, sans-serif;
+        background: #f3f4f6;
+        color: #111827;
+      }
+      textarea {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+      }
+      button {
+        margin-top: 0.75rem;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        background-color: #1e40af;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      video {
+        margin-top: 1rem;
+        width: 100%;
+        max-width: 800px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Ask Olivia About Your CLUES Report</h1>
+    <textarea id="msg" rows="4" placeholder="Type your question here..."></textarea><br/>
+    <button onclick="askOlivia()">Ask Olivia</button>
+    <video id="oliviaVideo" controls autoplay playsinline></video>
+    <script>
+      async function askOlivia() {
+        const message = document.getElementById("msg").value;
+        if (!message) return alert("Please enter a question.");
+        const res = await fetch("https://olivia-api-clues.vercel.app/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message,
+            clientId: "test-client"
+          })
+        });
+        const data = await res.json();
+        const video = document.getElementById("oliviaVideo");
+        video.src = data.video;
+        video.load();
+        video.play();
+      }
+    </script>
+  </body>
+</html>
